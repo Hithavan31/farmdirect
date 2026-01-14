@@ -31,12 +31,32 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
   console.warn("   Google Sign-In will not work without these credentials");
 }
 
+// Add this near the top of server.js, replacing the existing cors configuration
+
+// CORS configuration for production
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'https://farmdirect.vercel.app', // ⚠️ CHANGE THIS to your actual Vercel URL
+  'https://your-custom-domain.com', // Add your custom domain if you have one
+];
+
 app.use(cors({
-  origin: true,
-  credentials: true
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn('⚠️ CORS blocked request from:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
-app.use(express.json());
-app.use(express.static(path.join(__dirname))); 
 
 // Session middleware (required for passport)
 app.use(session({
