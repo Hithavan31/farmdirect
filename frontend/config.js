@@ -10,7 +10,7 @@ const CONFIG = {
   // API URLs
   API_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:3000'
-    : 'https://farmdirect-backend.onrender.com', // ⚠️ CHANGE THIS to your actual Render URL
+    : 'https://farmdirect-backendd.onrender.com', // ⚠️ CHANGE THIS to your actual Render URL
   
   // App URLs
   APP_URL: window.location.origin,
