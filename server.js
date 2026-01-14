@@ -22,7 +22,7 @@ const MONGO_URI = process.env.MONGO_URI;
 // Google OAuth credentials from environment variables
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || "http://localhost:3000/auth/google/callback";
+const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || "http://${API_URL}/auth/google/callback";
 
 // Check if Google OAuth is properly configured
 if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
@@ -37,7 +37,7 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
 const allowedOrigins = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
-  'farmdirect-rouge.vercel.app', // ⚠️ CHANGE THIS to your actual Vercel URL
+  'https://farmdirect-rouge.vercel.app', // ⚠️ CHANGE THIS to your actual Vercel URL
   
 ];
 
