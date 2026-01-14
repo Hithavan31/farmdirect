@@ -257,7 +257,7 @@ async function register() {
   console.log('Attempting registration:', { name, email, role });
 
   try {
-    const res = await fetch("http://localhost:3000/auth/register", {
+    const res = await fetch("${API_URL}/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password, role })
@@ -299,7 +299,7 @@ document.addEventListener('keypress', function(e) {
 // Check if server is reachable on page load
 window.addEventListener('load', async function() {
   try {
-    const res = await fetch("http://localhost:3000/");
+    const res = await fetch("${API_URL}/");
     if (res.ok) {
       console.log('✅ Server is reachable');
     }
