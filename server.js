@@ -37,8 +37,8 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
 const allowedOrigins = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
-  'https://farmdirect.vercel.app', // ⚠️ CHANGE THIS to your actual Vercel URL
-  'https://your-custom-domain.com', // Add your custom domain if you have one
+  'farmdirect-rouge.vercel.app', // ⚠️ CHANGE THIS to your actual Vercel URL
+  
 ];
 
 app.use(cors({
