@@ -1,0 +1,280 @@
+<!doctype html>
+<html>
+<head>
+  <title>FarmDirect - Connect Farmers & Retailers</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .left-section {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      position: relative;
+    }
+
+    .farmer-image-container {
+      position: relative;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .farmer-image-container img {
+      width: 100%;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .image-overlay {
+      position: absolute;
+      bottom: 30px;
+      left: 30px;
+      right: 30px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 20px;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+    }
+
+    .image-overlay h2 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+
+    .image-overlay p {
+      color: #666;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .right-section {
+      flex: 0 0 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .login-box {
+      background: white;
+      padding: 50px 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo h1 {
+      color: #667eea;
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .logo .tagline {
+      color: #666;
+      font-size: 16px;
+    }
+
+    .features {
+      text-align: left;
+      margin: 30px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 10px;
+    }
+
+    .features h3 {
+      margin-top: 0;
+      color: #667eea;
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .features ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .features li {
+      padding: 8px 0;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .features li:before {
+      content: "✓ ";
+      color: #27ae60;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+
+    .btn-secondary:hover {
+      background: #667eea;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .divider {
+      text-align: center;
+      margin: 20px 0;
+      color: #999;
+      font-size: 14px;
+    }
+
+    @media (max-width: 1024px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .left-section {
+        min-height: 50vh;
+      }
+
+      .right-section {
+        flex: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .left-section {
+        padding: 20px;
+      }
+
+      .right-section {
+        padding: 20px;
+      }
+
+      .login-box {
+        padding: 30px 20px;
+      }
+
+      .logo h1 {
+        font-size: 32px;
+      }
+
+      .image-overlay {
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        padding: 15px;
+      }
+
+      .image-overlay h2 {
+        font-size: 18px;
+      }
+
+      .image-overlay p {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Left Section - Farmer Image -->
+  <div class="left-section">
+    <div class="farmer-image-container">
+     <img src="images/India_Farming.jpg"
+     alt="Indian Farming"
+     >
+
+      
+    </div>
+  </div>
+
+  <!-- Right Section - Login Box -->
+  <div class="right-section">
+    <div class="login-box">
+      <div class="logo">
+        <h1>🌾 FarmDirect</h1>
+        <p class="tagline">Farm to Market, Directly</p>
+      </div>
+
+      <div class="features">
+        <h3>Why FarmDirect?</h3>
+        <ul>
+          <li>Direct connection with farmers</li>
+          <li>No middlemen, better prices</li>
+          <li>Easy produce listing</li>
+          <li>Secure transactions</li>
+        </ul>
+      </div>
+
+      <button type="button" class="btn-primary" onclick="goLogin()">Login to Your Account</button>
+      
+      <div class="divider">Don't have an account?</div>
+      
+      <button type="button" class="btn-secondary" onclick="goRegister()">Register Now</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function goLogin() {
+  window.location.href = "login.html";
+}
+
+function goRegister() {
+  window.location.href = "register.html";
+}
+</script>
+
+</body>
+</html>

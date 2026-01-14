@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Farmer Dashboard - FarmDirect</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #fafafa;
+      margin: 0;
+    }
+
+    .header {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .header h1 {
+      margin: 0;
+      color: #333;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .role-badge {
+      background: #667eea;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 5px 5px 5px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    button {
+      cursor: pointer;
+      background: #667eea;
+      color: white;
+      border: none;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #5568d3;
+    }
+
+    .btn-danger {
+      background: #e74c3c;
+    }
+
+    .btn-danger:hover {
+      background: #c0392b;
+    }
+
+    .btn-secondary {
+      background: #95a5a6;
+    }
+
+    .btn-secondary:hover {
+      background: #7f8c8d;
+    }
+
+    .btn-success {
+      background: #27ae60;
+    }
+
+    .btn-success:hover {
+      background: #229954;
+    }
+
+    .produce-row {
+      margin-left: 10px;
+      margin-bottom: 15px;
+      padding: 15px;
+      background: #f8f8f8;
+      border-radius: 5px;
+      border-left: 3px solid #667eea;
+    }
+
+    .produce-row input {
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+
+    .produce-row label {
+      display: block;
+      font-weight: bold;
+      margin: 10px 0 5px 0;
+      color: #555;
+    }
+
+    .photo-preview {
+      max-width: 200px;
+      max-height: 200px;
+      border-radius: 5px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .photo-preview.show {
+      display: block;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .card p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .card ul {
+      margin: 5px 0 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .card li {
+      font-size: 14px;
+      margin: 10px 0;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 5px;
+    }
+
+    .produce-photo {
+      width: 100%;
+      max-width: 200px;
+      height: auto;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .btn-row button {
+      flex: 1;
+    }
+
+    hr {
+      margin: 30px 0;
+      border: none;
+      border-top: 2px solid #eee;
+    }
+
+    .form-section {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .error {
+      color: #e74c3c;
+      padding: 10px;
+      background: #fee;
+      border-radius: 5px;
+      margin: 10px 0;
+      display: none;
+    }
+
+    .success {
+      color: #27ae60;
+      padding: 10px;
+      background: #efe;
+      border-radius: 5px;
+      margin: 10px 0;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>🌾 Farmer Dashboard</h1>
+  <div class="nav-buttons">
+    <span class="role-badge" id="role-badge">👤 Farmer</span>
+    <button onclick="goToOrders()">📦 View Orders</button>
+    <button onclick="switchToRetailer()" class="btn-success" id="switch-role-btn" style="display: none;">
+      🛒 Switch to Retailer
+    </button>
+    <button onclick="logout()" class="btn-danger">Logout</button>
+  </div>
+</div>
+
+<div class="error" id="error-msg"></div>
+<div class="success" id="success-msg"></div>
+
+<div class="form-section">
+  <h2>Add / Edit Your Farm Details</h2>
+
+  <form id="farmer-form">
+    <input id="farmer-name" placeholder="Farm/Farmer Name" required>
+    <input id="farmer-contact" placeholder="Contact Number">
+    <input id="farmer-location" placeholder="Location">
+
+    <h3>Product Items</h3>
+    <div id="produce-list"></div>
+
+    <button type="button" onclick="addProduce()" class="btn-secondary">+ Add Product Item</button>
+    <button type="submit">Save Farm Details</button>
+  </form>
+</div>
+
+<hr>
+
+<h2>All Farmers in the System</h2>
+<div id="farmers-container" class="card-grid"></div>
+
+<script>
+// Get auth data from URL parameters
+const urlParams = new URLSearchParams(window.location.search);
+const authToken = urlParams.get('token');
+let userRole = urlParams.get('role') || urlParams.get('activeRole');
+const userId = urlParams.get('userId');
+const userRoles = urlParams.get('roles') ? urlParams.get('roles').split(',') : [userRole];
+
+console.log('Auth data:', { 
+  token: authToken ? 'Present' : 'Missing', 
+  role: userRole,
+  roles: userRoles,
+  userId: userId 
+});
+
+// Check authentication
+if (!authToken || userRole !== 'farmer') {
+  alert("Unauthorized access. Please login as a farmer.");
+  window.location.href = "login.html";
+}
+
+// Show role switch button if user has both roles
+if (userRoles.includes('retailer')) {
+  document.getElementById('switch-role-btn').style.display = 'inline-block';
+  document.getElementById('role-badge').textContent = '👤 Farmer (Multi-Role)';
+}
+
+let editingFarmerId = null;
+
+function showError(message) {
+  const errorEl = document.getElementById('error-msg');
+  errorEl.textContent = message;
+  errorEl.style.display = 'block';
+  document.getElementById('success-msg').style.display = 'none';
+}
+
+function showSuccess(message) {
+  const successEl = document.getElementById('success-msg');
+  successEl.textContent = message;
+  successEl.style.display = 'block';
+  document.getElementById('error-msg').style.display = 'none';
+}
+
+async function switchToRetailer() {
+  if (!confirm('Switch to Retailer dashboard?')) return;
+  
+  try {
+    const res = await fetch('http://localhost:3000/auth/switch-role', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`
+      },
+      body: JSON.stringify({ activeRole: 'retailer' })
+    });
+    
+    const data = await res.json();
+    
+    if (res.ok) {
+      const params = new URLSearchParams({
+        token: data.token,
+        roles: data.roles.join(','),
+        role: data.activeRole,
+        activeRole: data.activeRole,
+        userId: userId
+      });
+      window.location.href = 'retailer.html?' + params.toString();
+    } else {
+      showError(data.error || 'Failed to switch role');
+    }
+  } catch (error) {
+    showError('Network error: ' + error.message);
+  }
+}
+
+/* =======================
+   ADD / UPDATE FARMER
+======================= */
+document.getElementById("farmer-form").addEventListener("submit", async function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById("farmer-name").value.trim();
+  const contact = document.getElementById("farmer-contact").value.trim();
+  const location = document.getElementById("farmer-location").value.trim();
+
+  if (!name) {
+    showError("Farm name is required");
+    return;
+  }
+
+  const produce = [];
+  document.querySelectorAll(".produce-row").forEach(row => {
+    const inputs = row.querySelectorAll("input");
+    const photoInput = row.querySelector('input[type="file"]');
+    const photoPreview = row.querySelector('.photo-preview');
+    
+    if (inputs[0].value.trim()) {
+      produce.push({
+        name: inputs[0].value.trim(),
+        qty: inputs[1].value.trim(),
+        price: inputs[2].value.trim(),
+        photo: photoPreview ? photoPreview.src : ""
+      });
+    }
+  });
+
+  const payload = { name, contact, location, produce };
+
+  try {
+    let res;
+    if (editingFarmerId) {
+      // UPDATE
+      res = await fetch(`http://localhost:3000/farmers/${editingFarmerId}`, {
+        method: "PUT",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`
+        },
+        body: JSON.stringify(payload)
+      });
+      editingFarmerId = null;
+    } else {
+      // CREATE (use profile endpoint)
+      res = await fetch("http://localhost:3000/farmers/profile", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`
+        },
+        body: JSON.stringify(payload)
+      });
+    }
+
+    const data = await res.json();
+
+    if (res.ok) {
+      showSuccess("Farm details saved successfully!");
+      document.getElementById("produce-list").innerHTML = "";
+      e.target.reset();
+      loadFarmers();
+    } else {
+      showError(data.error || "Failed to save farm details");
+    }
+  } catch (error) {
+    showError("Network error: " + error.message);
+  }
+});
+
+/* =======================
+   LOAD FARMERS
+======================= */
+async function loadFarmers() {
+  try {
+    const res = await fetch("http://localhost:3000/farmers");
+    const farmers = await res.json();
+
+    const container = document.getElementById("farmers-container");
+    container.innerHTML = "";
+
+    if (farmers.length === 0) {
+      container.innerHTML = "<p>No farmers registered yet.</p>";
+      return;
+    }
+
+    farmers.forEach(f => {
+      let produceHtml = "<b>Available Products:</b><ul>";
+
+      if (f.produce && f.produce.length > 0) {
+        f.produce.forEach(p => {
+          produceHtml += `<li>`;
+          if (p.photo) {
+            produceHtml += `<img src="${p.photo}" class="produce-photo" alt="${p.name}">`;
+          }
+          
+          produceHtml += `<br><strong>Product:</strong> ${p.name}<br>`;
+          produceHtml += `<strong>Quantity:</strong> ${p.qty}<br>`;
+          produceHtml += `<strong>Price:</strong> ₹${p.price}`;
+          produceHtml += `</li>`;
+        });
+        produceHtml += "</ul>";
+      } else {
+        produceHtml += "<li style='opacity:0.7; font-style: italic;'>No produce listed yet</li></ul>";
+      }
+
+      const div = document.createElement("div");
+      div.className = "card";
+      
+      const isOwner = f.userId && f.userId === userId;
+      const buttonHtml = isOwner ? `
+        <div class="btn-row">
+          <button onclick='editFarmer(${JSON.stringify(f).replace(/'/g, "&apos;")})'>Edit</button>
+          <button onclick="deleteFarmer('${f._id}')" class="btn-danger">Delete</button>
+        </div>
+      ` : '';
+
+      div.innerHTML = `
+        <h3>${f.name}</h3>
+        <p><b>Contact:</b> ${f.contact || "Not provided"}</p>
+        <p><b>Location:</b> ${f.location || "Not provided"}</p>
+        ${produceHtml}
+        ${buttonHtml}
+      `;
+
+      container.appendChild(div);
+    });
+  } catch (error) {
+    showError("Failed to load farmers: " + error.message);
+  }
+}
+
+/* =======================
+   EDIT FARMER
+======================= */
+function editFarmer(farmer) {
+  document.getElementById("farmer-name").value = farmer.name || "";
+  document.getElementById("farmer-contact").value = farmer.contact || "";
+  document.getElementById("farmer-location").value = farmer.location || "";
+
+  document.getElementById("produce-list").innerHTML = "";
+  if (farmer.produce && farmer.produce.length > 0) {
+    farmer.produce.forEach(p => {
+      const div = document.createElement("div");
+      div.className = "produce-row";
+      div.innerHTML = `
+        <input value="${p.name}" placeholder="Product Name">
+        <input value="${p.qty}" placeholder="Quantity">
+        <input value="${p.price}" placeholder="Price">
+        <label>Product Photo (optional):</label>
+        <input type="file" accept="image/*" onchange="handlePhotoUpload(event, this)">
+        ${p.photo ? `<img src="${p.photo}" class="photo-preview show" alt="Product">` : '<img class="photo-preview" alt="Product">'}
+        <button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding: 5px 10px; margin-top: 10px;">Remove</button>
+      `;
+      document.getElementById("produce-list").appendChild(div);
+    });
+  }
+
+  editingFarmerId = farmer._id;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showSuccess("Edit mode activated. Update the form and save.");
+}
+
+/* =======================
+   DELETE FARMER
+======================= */
+async function deleteFarmer(id) {
+  if (!confirm("Are you sure you want to delete this farm entry?")) return;
+
+  try {
+    const res = await fetch(`http://localhost:3000/farmers/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${authToken}`
+      }
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      showSuccess("Farm entry deleted successfully!");
+      loadFarmers();
+    } else {
+      showError(data.error || "Failed to delete farm entry");
+    }
+  } catch (error) {
+    showError("Network error: " + error.message);
+  }
+}
+
+/* =======================
+   ADD PRODUCE (UI)
+======================= */
+function addProduce() {
+  const div = document.createElement("div");
+  div.className = "produce-row";
+  div.innerHTML = `
+    <input placeholder="Product Name (e.g., Tomatoes)">
+    <input placeholder="Quantity (e.g., 100kg)">
+    <input placeholder="Price (e.g., 50)">
+    <label>Product Photo (optional):</label>
+    <input type="file" accept="image/*" onchange="handlePhotoUpload(event, this)">
+    <img class="photo-preview" alt="Product Preview">
+    <button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding: 5px 10px; margin-top: 10px;">Remove</button>
+  `;
+  document.getElementById("produce-list").appendChild(div);
+}
+
+/* =======================
+   PHOTO UPLOAD HANDLER
+======================= */
+function handlePhotoUpload(event, input) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // Check file size (max 1MB)
+  if (file.size > 1024 * 1024) {
+    alert('Image size should be less than 1MB');
+    input.value = '';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const preview = input.parentElement.querySelector('.photo-preview');
+    preview.src = e.target.result;
+    preview.classList.add('show');
+  };
+  reader.readAsDataURL(file);
+}
+
+/* =======================
+   GO TO ORDERS
+======================= */
+function goToOrders() {
+  const params = new URLSearchParams({
+    token: authToken,
+    role: userRole,
+    roles: userRoles.join(','),
+    activeRole: userRole,
+    userId: userId
+  });
+  window.location.href = 'farmer-orders.html?' + params.toString();
+}
+
+/* =======================
+   LOGOUT
+======================= */
+function logout() {
+  if (confirm("Are you sure you want to logout?")) {
+    window.location.href = "login.html";
+  }
+}
+
+// Initial load
+loadFarmers();
+</script>
+
+</body>
+</html>

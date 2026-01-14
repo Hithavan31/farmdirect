@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmDirect Project Report</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+        
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.6;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+        }
+        
+        .page {
+            page-break-after: always;
+            min-height: 297mm;
+            padding: 30px;
+            box-sizing: border-box;
+            background: white;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .signature-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 250mm;
+        }
+        
+        .signature-section {
+            margin-top: 100px;
+        }
+        
+        .signature-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 50px;
+        }
+        
+        .signature-line {
+            color: #e74c3c;
+            font-weight: bold;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        .toc-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 40px 0 30px 0;
+        }
+        
+        .toc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+        }
+        
+        .toc-table th,
+        .toc-table td {
+            border: 1px solid #000;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .toc-table th {
+            background: #f0f0f0;
+            font-weight: bold;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 50px 0 30px 0;
+            text-transform: uppercase;
+        }
+        
+        .subsection-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 25px 0 15px 0;
+        }
+        
+        .content {
+            text-align: justify;
+            margin: 15px 0;
+        }
+        
+        .requirement-list {
+            margin-left: 30px;
+            margin-top: 10px;
+        }
+        
+        .requirement-list li {
+            margin: 8px 0;
+        }
+        
+        .diagram-placeholder {
+            border: 2px dashed #ccc;
+            padding: 50px;
+            text-align: center;
+            margin: 30px 0;
+            background: #f9f9f9;
+        }
+        
+        .code-block {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .page {
+                box-shadow: none;
+                margin: 0;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Page 1: Signature Page -->
+    <div class="page signature-page">
+        <div class="signature-section">
+            <div class="signature-title">Signature</div>
+            <div class="signature-line">NAME1 (USN1)</div>
+            <div class="signature-line">NAME2 (USN2)</div>
+            <div class="signature-line">NAME3 (USN3)</div>
+            <div class="signature-line">NAME4 (USN4)</div>
+        </div>
+    </div>
+
+    <!-- Page 2: Table of Contents -->
+    <div class="page">
+        <div class="toc-title">TABLE OF CONTENTS</div>
+        
+        <table class="toc-table">
+            <thead>
+                <tr>
+                    <th style="width: 15%;">Serial No.</th>
+                    <th style="width: 65%;">TITLE</th>
+                    <th style="width: 20%;">PAGE NO.</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Introduction</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>1.1</td>
+                    <td>Overview</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>1.2</td>
+                    <td>Motivation</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Software Requirement Specification</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>2.1</td>
+                    <td>Hardware Requirements</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>2.2</td>
+                    <td>Software Requirements</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>ER Diagram of the Project</td>
+                    <td>5</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Schema of Project</td>
+                    <td>6</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>User Interface Design</td>
+                    <td>7</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>Back End Design</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>Conclusion and Future Work</td>
+                    <td>9</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>References</td>
+                    <td>10</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Page 3: Introduction -->
+    <div class="page">
+        <div class="section-title">1. INTRODUCTION</div>
+        
+        <div class="subsection-title">1.1 Overview</div>
+        <div class="content">
+            FarmDirect is a comprehensive web-based platform designed to bridge the gap between farmers and retailers by eliminating middlemen. The system provides a direct marketplace where farmers can list their produce with real-time inventory management, and retailers can browse, order, and track their purchases efficiently. Built using the MERN stack (MongoDB, Express.js, React, Node.js), the platform ensures secure transactions, role-based access control, and automated inventory updates.
+        </div>
+        
+        <div class="content">
+            The platform features separate dashboards for farmers and retailers, with functionality including user authentication, product management with photo uploads, order placement with UPI/COD payment options, real-time inventory tracking, and order status management. The system is designed to be scalable, secure, and user-friendly, ensuring that both farmers and retailers can benefit from transparent pricing and direct communication.
+        </div>
+
+        <div class="subsection-title">1.2 Motivation</div>
+        <div class="content">
+            The agricultural supply chain in India suffers from multiple inefficiencies, primarily due to the presence of numerous intermediaries between farmers and retailers. This leads to:
+        </div>
+        
+        <ul class="requirement-list">
+            <li><strong>Reduced Farmer Income:</strong> Farmers receive only a fraction of the final retail price due to multiple middlemen taking their share.</li>
+            <li><strong>Higher Retail Prices:</strong> Retailers pay inflated prices, which are then passed on to consumers.</li>
+            <li><strong>Lack of Transparency:</strong> Both parties have limited visibility into pricing, quality, and availability.</li>
+            <li><strong>Inventory Wastage:</strong> Poor communication leads to oversupply or undersupply situations.</li>
+            <li><strong>Payment Delays:</strong> Complex payment chains result in delayed payments to farmers.</li>
+        </ul>
+
+        <div class="content">
+            FarmDirect addresses these challenges by providing a digital platform that enables direct connection between farmers and retailers. This ensures fair pricing for farmers, competitive rates for retailers, real-time inventory management, secure payment options (UPI/Cash on Delivery), and transparent order tracking for both parties.
+        </div>
+    </div>
+
+    <!-- Page 4: Software Requirements -->
+    <div class="page">
+        <div class="section-title">2. SOFTWARE REQUIREMENT SPECIFICATION</div>
+        
+        <div class="subsection-title">2.1 Hardware Requirements</div>
+        <ul class="requirement-list">
+            <li><strong>Processor:</strong> Intel Core i3 or higher / AMD Ryzen 3 or higher</li>
+            <li><strong>RAM:</strong> Minimum 4GB (8GB recommended for development)</li>
+            <li><strong>Storage:</strong> 10GB free disk space</li>
+            <li><strong>Network:</strong> Stable internet connection (minimum 2 Mbps)</li>
+            <li><strong>Display:</strong> 1366x768 resolution or higher</li>
+            <li><strong>Input Devices:</strong> Keyboard and Mouse</li>
+        </ul>
+
+        <div class="subsection-title">2.2 Software Requirements</div>
+        
+        <div class="content"><strong>Development Environment:</strong></div>
+        <ul class="requirement-list">
+            <li><strong>Operating System:</strong> Windows 10/11, macOS 10.14+, or Linux (Ubuntu 18.04+)</li>
+            <li><strong>Code Editor:</strong> Visual Studio Code 1.70 or higher</li>
+            <li><strong>Version Control:</strong> Git 2.30+</li>
+            <li><strong>Node.js:</strong> Version 16.x or higher</li>
+            <li><strong>npm:</strong> Version 8.x or higher</li>
+        </ul>
+
+        <div class="content"><strong>Backend Technologies:</strong></div>
+        <ul class="requirement-list">
+            <li><strong>Runtime:</strong> Node.js (JavaScript runtime environment)</li>
+            <li><strong>Framework:</strong> Express.js 4.18+</li>
+            <li><strong>Database:</strong> MongoDB Atlas (Cloud database)</li>
+            <li><strong>ODM:</strong> Mongoose 8.0+</li>
+            <li><strong>Authentication:</strong> JSON Web Tokens (JWT)</li>
+            <li><strong>Password Hashing:</strong> bcryptjs 3.0+</li>
+            <li><strong>CORS:</strong> cors package for cross-origin requests</li>
+        </ul>
+
+        <div class="content"><strong>Frontend Technologies:</strong></div>
+        <ul class="requirement-list">
+            <li><strong>HTML5:</strong> Structure and semantic markup</li>
+            <li><strong>CSS3:</strong> Styling, animations, and responsive design</li>
+            <li><strong>JavaScript (ES6+):</strong> Client-side functionality</li>
+            <li><strong>Fetch API:</strong> HTTP requests to backend</li>
+        </ul>
+
+        <div class="content"><strong>Database:</strong></div>
+        <ul class="requirement-list">
+            <li><strong>MongoDB Atlas:</strong> Cloud-hosted NoSQL database</li>
+            <li><strong>Collections:</strong> Users, Farmers, Orders</li>
+            <li><strong>Storage:</strong> Base64 encoded images for product photos</li>
+        </ul>
+    </div>
+
+    <!-- Page 5: ER Diagram -->
+    <div class="page">
+        <div class="section-title">3. ER DIAGRAM OF THE PROJECT</div>
+        
+        <div class="content">
+            The Entity-Relationship (ER) diagram illustrates the database structure and relationships between different entities in the FarmDirect system.
+        </div>
+
+        <div class="diagram-placeholder">
+            <h3>ER Diagram</h3>
+            <div style="margin-top: 20px; text-align: left; display: inline-block;">
+                <strong>Entities:</strong><br><br>
+                <strong>1. USER</strong><br>
+                - _id (PK)<br>
+                - name<br>
+                - email (unique)<br>
+                - password (hashed)<br>
+                - role (farmer/retailer)<br>
+                - createdAt<br><br>
+
+                <strong>2. FARMER</strong><br>
+                - _id (PK)<br>
+                - userId (FK → User)<br>
+                - name<br>
+                - contact<br>
+                - location<br>
+                - produce[] (array)<br>
+                &nbsp;&nbsp;- name<br>
+                &nbsp;&nbsp;- qty<br>
+                &nbsp;&nbsp;- price<br>
+                &nbsp;&nbsp;- photo (Base64)<br><br>
+
+                <strong>3. ORDER</strong><br>
+                - _id (PK)<br>
+                - retailerId (FK → User)<br>
+                - retailerName<br>
+                - retailerContact<br>
+                - farmerId (FK → Farmer)<br>
+                - farmerName<br>
+                - items[]<br>
+                - totalAmount<br>
+                - status<br>
+                - paymentMethod<br>
+                - deliveryAddress<br>
+                - orderDate<br><br>
+
+                <strong>Relationships:</strong><br>
+                - User (1) → (1) Farmer<br>
+                - Farmer (1) → (M) Orders<br>
+                - User/Retailer (1) → (M) Orders
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 6: Schema -->
+    <div class="page">
+        <div class="section-title">4. SCHEMA OF PROJECT</div>
+        
+        <div class="subsection-title">4.1 User Schema</div>
+        <div class="code-block">
+{
+  _id: ObjectId,
+  name: String (required),
+  email: String (required, unique, lowercase),
+  password: String (required, hashed with bcrypt),
+  role: String (enum: ["farmer", "retailer", "admin"]),
+  createdAt: Date (default: Date.now),
+  isActive: Boolean (default: true)
+}
+        </div>
+
+        <div class="subsection-title">4.2 Farmer Schema</div>
+        <div class="code-block">
+{
+  _id: ObjectId,
+  userId: ObjectId (ref: "User", required, unique),
+  name: String (required),
+  contact: String,
+  location: String,
+  produce: [
+    {
+      name: String (required),
+      qty: String (required),
+      price: String (required),
+      photo: String (Base64 encoded image)
+    }
+  ],
+  createdAt: Date (default: Date.now),
+  updatedAt: Date (default: Date.now)
+}
+        </div>
+
+        <div class="subsection-title">4.3 Order Schema</div>
+        <div class="code-block">
+{
+  _id: ObjectId,
+  retailerId: ObjectId (ref: "User", required),
+  retailerName: String (required),
+  retailerContact: String (required),
+  farmerId: ObjectId (ref: "Farmer", required),
+  farmerName: String (required),
+  farmerContact: String,
+  items: [
+    {
+      produceName: String (required),
+      quantity: Number (required),
+      price: String (required)
+    }
+  ],
+  totalAmount: Number (required),
+  deliveryAddress: String (required),
+  contactNumber: String (required),
+  courierService: String (enum: ["standard", "express", "farmer-choice"]),
+  paymentMethod: String (enum: ["upi", "cod"], required),
+  upiTransactionId: String,
+  status: String (enum: ["pending", "confirmed", "delivered", "cancelled"]),
+  orderDate: Date (default: Date.now),
+  confirmedAt: Date,
+  deliveredAt: Date,
+  cancelledAt: Date,
+  notes: String
+}
+        </div>
+    </div>
+
+    <!-- Page 7: User Interface -->
+    <div class="page">
+        <div class="section-title">5. USER INTERFACE DESIGN</div>
+        
+        <div class="subsection-title">5.1 Landing Page (index.html)</div>
+        <div class="content">
+            The landing page features a modern split-screen design with an Indian farmer image on the left and login options on the right. It includes a gradient background, glassmorphism effects, and clear call-to-action buttons for login and registration.
+        </div>
+
+        <div class="subsection-title">5.2 Authentication Pages</div>
+        <div class="content">
+            <strong>Login Page:</strong> Clean form with email and password inputs, error handling, and role-based redirection.<br>
+            <strong>Registration Page:</strong> User-friendly form with name, email, password, and role selection (Farmer/Retailer).
+        </div>
+
+        <div class="subsection-title">5.3 Farmer Dashboard (farmers.html)</div>
+        <div class="content">
+            Features include:
+        </div>
+        <ul class="requirement-list">
+            <li>Farm profile management (name, contact, location)</li>
+            <li>Product listing with photo upload capability</li>
+            <li>Add/Edit/Delete products</li>
+            <li>View all farmers in the system</li>
+            <li>Navigation to order management</li>
+            <li>Real-time inventory display</li>
+        </ul>
+
+        <div class="subsection-title">5.4 Farmer Order Management (farmer-orders.html)</div>
+        <div class="content">
+            Dashboard showing:
+        </div>
+        <ul class="requirement-list">
+            <li>Statistics cards (Total Orders, Pending Orders, Total Revenue)</li>
+            <li>Order filtering by status (All, Pending, Confirmed, Delivered, Cancelled)</li>
+            <li>Detailed order information including retailer contact</li>
+            <li>Action buttons to confirm/cancel/mark as delivered</li>
+            <li>Payment method indicators (UPI/COD)</li>
+        </ul>
+
+        <div class="subsection-title">5.5 Retailer Dashboard (retailer.html)</div>
+        <div class="content">
+            Features include:
+        </div>
+        <ul class="requirement-list">
+            <li>Browse farmers and their products</li>
+            <li>Product cards with photos and pricing</li>
+            <li>Order placement modal with quantity validation</li>
+            <li>Payment method selection (UPI/COD)</li>
+            <li>Delivery address and contact input</li>
+            <li>Order history tab showing personal orders only</li>
+            <li>Out of stock indicators</li>
+        </ul>
+    </div>
+
+    <!-- Page 8: Backend Design -->
+    <div class="page">
+        <div class="section-title">6. BACK END DESIGN</div>
+        
+        <div class="subsection-title">6.1 API Architecture</div>
+        <div class="content">
+            The backend is built using Node.js with Express.js framework, following RESTful API principles. The server handles authentication, authorization, data validation, and business logic.
+        </div>
+
+        <div class="subsection-title">6.2 Authentication & Authorization</div>
+        <div class="code-block">
+// JWT-based authentication middleware
+function auth(requiredRole) {
+  return (req, res, next) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+    if (requiredRole && decoded.role !== requiredRole) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+    
+    req.user = decoded;
+    next();
+  };
+}
+        </div>
+
+        <div class="subsection-title">6.3 API Endpoints</div>
+        
+        <div class="content"><strong>Authentication Routes:</strong></div>
+        <div class="code-block">
+POST /auth/register - Register new user (farmer/retailer)
+POST /auth/login    - Login and receive JWT token
+        </div>
+
+        <div class="content"><strong>Farmer Routes:</strong></div>
+        <div class="code-block">
+GET    /farmers        - Get all farmers (public)
+GET    /farmers/me     - Get current farmer profile (auth)
+POST   /farmers/profile - Create/Update farmer profile (auth)
+PUT    /farmers/:id    - Update farmer by ID (auth, owner only)
+DELETE /farmers/:id    - Delete farmer by ID (auth, owner only)
+        </div>
+
+        <div class="content"><strong>Order Routes:</strong></div>
+        <div class="code-block">
+POST /orders              - Place order (retailer only)
+GET  /orders/me           - Get retailer's own orders (auth)
+GET  /orders/farmer       - Get farmer's received orders (auth)
+PUT  /orders/:id/status   - Update order status (farmer only)
+GET  /orders/:id          - Get single order details (auth)
+        </div>
+
+        <div class="subsection-title">6.4 Inventory Management</div>
+        <div class="content">
+            The system implements real-time inventory tracking with the following features:
+        </div>
+        <ul class="requirement-list">
+            <li><strong>Quantity Validation:</strong> Prevents over-ordering by checking available stock before accepting orders</li>
+            <li><strong>Automatic Updates:</strong> Inventory decreases automatically when orders are placed</li>
+            <li><strong>Out of Stock Marking:</strong> Products with zero quantity are marked as "Out of Stock"</li>
+            <li><strong>Inventory Restoration:</strong> Quantities are restored if orders are cancelled</li>
+        </ul>
+
+        <div class="subsection-title">6.5 Security Features</div>
+        <ul class="requirement-list">
+            <li>Password hashing using bcryptjs (10 salt rounds)</li>
+            <li>JWT tokens with 24-hour expiration</li>
+            <li>Role-based access control (RBAC)</li>
+            <li>Owner validation for edit/delete operations</li>
+            <li>Order privacy (retailers see only their own orders)</li>
+            <li>Input validation and sanitization</li>
+        </ul>
+    </div>
+
+    <!-- Page 9: Conclusion -->
+    <div class="page">
+        <div class="section-title">7. CONCLUSION AND FUTURE WORK</div>
+        
+        <div class="subsection-title">7.1 Conclusion</div>
+        <div class="content">
+            FarmDirect successfully addresses the critical challenges in the agricultural supply chain by providing a direct digital marketplace between farmers and retailers. The platform eliminates intermediaries, ensuring fair pricing for farmers while offering competitive rates to retailers. The implementation of real-time inventory management, secure authentication, and role-based access control demonstrates the system's robustness and scalability.
+        </div>
+
+        <div class="content">
+            Key achievements of the project include:
+        </div>
+        <ul class="requirement-list">
+            <li>Successful implementation of a full-stack web application using MERN stack technologies</li>
+            <li>Real-time inventory tracking with automatic updates and out-of-stock management</li>
+            <li>Secure authentication system with JWT and bcrypt password hashing</li>
+            <li>Order management system with multiple payment options (UPI/COD)</li>
+            <li>Product photo upload functionality with Base64 storage</li>
+            <li>Privacy-focused architecture ensuring order isolation between retailers</li>
+            <li>Responsive user interface optimized for various devices</li>
+        </ul>
+
+        <div class="content">
+            The platform successfully bridges the gap between farmers and retailers, providing transparency, efficiency, and direct communication channels that were previously unavailable in traditional supply chains.
+        </div>
+
+        <div class="subsection-title">7.2 Future Work</div>
+        <div class="content">
+            Several enhancements can be implemented to further improve the platform:
+        </div>
+
+        <div class="content"><strong>Feature Enhancements:</strong></div>
+        <ul class="requirement-list">
+            <li><strong>Payment Gateway Integration:</strong> Integrate Razorpay or Stripe for online payments</li>
+            <li><strong>Real-time Notifications:</strong> Email and SMS alerts for order status updates</li>
+            <li><strong>Rating and Review System:</strong> Allow retailers to rate farmers and products</li>
+            <li><strong>Advanced Search:</strong> Implement filtering by location, price range, and product category</li>
+            <li><strong>Bulk Ordering:</strong> Enable ordering multiple products from multiple farmers</li>
+            <li><strong>Order Tracking:</strong> Integration with courier services for real-time delivery tracking</li>
+            <li><strong>Analytics Dashboard:</strong> Provide insights on sales, popular products, and revenue trends</li>
+            <li><strong>Chat System:</strong> Direct messaging between farmers and retailers</li>
+        </ul>
+
+        <div class="content"><strong>Technical Improvements:</strong></div>
+        <ul class="requirement-list">
+            <li><strong>Cloud Storage:</strong> Migrate from Base64 to AWS S3 or Cloudinary for image storage</li>
+            <li><strong>Caching:</strong> Implement Redis for improved performance</li>
+            <li><strong>Mobile Application:</strong> Develop native apps for iOS and Android</li>
+            <li><strong>Microservices:</strong> Split into separate services for scalability</li>
+            <li><strong>GraphQL:</strong> Implement GraphQL for more efficient data fetching</li>
+            <li><strong>PWA:</strong> Convert to Progressive Web App for offline functionality</li>
+        </ul>
+
+        <div class="content"><strong>Business Features:</strong></div>
+        <ul class="requirement-list">
+            <li>Multi-language support for regional accessibility</li>
+            <li>Invoice generation and GST compliance</li>
+            <li>Subscription plans for farmers</li>
+            <li>Farmer verification system</li>
+            <li>Seasonal demand forecasting using machine learning</li>
+        </ul>
+    </div>
+
+    <!-- Page 10: References -->
+    <div class="page">
+        <div class="section-title">8. REFERENCES</div>
+        
+        <div class="content">
+            <strong>[1]</strong> "Node.js Documentation," Node.js Foundation. [Online]. Available: https://nodejs.org/docs/. [Accessed: Dec. 2024].
+        </div>
+
+        <div class="content">
+            <strong>[2]</strong> "Express.js Framework Documentation," Express.js. [Online]. Available: https://expressjs.com/. [Accessed: Dec. 2024].
+        </div>
+
+        <div class="content">
+            <strong>[3]</strong> "MongoDB Manual," MongoDB Inc. [Online]. Available: https://docs.mongodb.com/manual/. [Accessed: Dec. 2024].
+        </div>
+
+        <div class="content">
+            <strong>[4]</strong> "Mongoose ODM Documentation," Mongoose. [Online]. Available: https://mongoosejs.com/docs/. [Accessed: Dec. 2024].
+        </div>
+
+        <div class="content">
+            <strong>[5]</strong> "JSON Web Tokens Introduction," JWT.io. [Online]. Available: https://jwt.io/introduction. [Accessed: Dec. 2024].
+        </div>
+
+        <div class="content">
+            <strong>[6]</strong> "bcrypt Password Hashing," npm bcryptjs. [Online]. Available: https://www.npmjs.com/package/bcryptjs. [Accessed: Dec. 2024].
+        </div>
+
+        <div class="content">
+            <strong>[7]</strong> "RESTful API Design Best Practices," Microsoft Azure. [Online]. Available: https://docs.microsoft.com/rest/api/. [Accessed: Dec. 2024].
+        </div>
+
+        <div class="content">
+            <strong>[8]</strong> "HTML5 Specification," W3C. [Online]. Available: https://html.spec.whatwg.org/. [Accessed: Dec. 2024].
+        </div>
+
+        <div class="content">
+            <strong>[9]</strong> "CSS3 Documentation," MDN Web Docs. [Online]. Available: https://developer.mozilla.org/en-US/docs/Web/CSS. [Accessed: Dec. 2024].
+        </div>
+
+        <div class="content">
+            <strong>[10]</strong> "JavaScript ES6+ Features," ECMAScript. [Online]. Available: https://www.ecma-international.org/. [Accessed: Dec. 2024].
+        </div>
+
+        <div class="content">
+            <strong>[11]</strong> R. Fielding, "Architectural Styles and the Design of Network-based Software Architectures," Ph.D. dissertation, University of California, Irvine, 2000.
+        </div>
+
+        <div class="content">
+            <strong>[12]</strong> "CORS (Cross-Origin Resource Sharing)," MDN Web Docs. [Online]. Available: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS. [Accessed: Dec. 2024].
+        </div>
+
+        <div class="content">
+            <strong>[13]</strong> "Git Version Control," Git Documentation. [Online]. Available: https://git-scm.com/doc. [Accessed: Dec. 2024].
+        </div>
+
+        <div class="content">
+            <strong>[14]</strong> "Visual Studio Code," Microsoft. [Online]. Available: https://code.visualstudio.com/docs. [Accessed: Dec. 2024].
+        </div>
+
+        <div class="content">
+            <strong>[15]</strong> "Database Security Best Practices," OWASP Foundation. [Online]. Available: https://owasp.org/. [Accessed: Dec. 2024].
+        </div>
+    </div>
+
+    <div style="text-align: center; padding: 40px; color: #999; font-size: 14px;">
+        <p>— End of Report —</p>
+        <p>FarmDirect: Connecting Farmers Directly with Retailers</p>
+    </div>
+
+</body>
+</html>

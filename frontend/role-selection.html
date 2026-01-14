@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Select Your Roles - FarmDirect</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .role-container {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      width: 100%;
+      max-width: 650px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #333;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .welcome-text {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+
+    .google-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #f0f4ff;
+      padding: 10px 20px;
+      border-radius: 25px;
+      margin-bottom: 20px;
+      border: 2px solid #667eea;
+    }
+
+    .google-badge img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .info-box {
+      background: #f0f4ff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      border-left: 4px solid #667eea;
+    }
+
+    .info-box p {
+      margin: 0;
+      color: #555;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    .role-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .role-card {
+      padding: 30px 20px;
+      border: 3px solid #ddd;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: white;
+      position: relative;
+    }
+
+    .role-card:hover {
+      border-color: #667eea;
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+    }
+
+    .role-card.selected {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+
+    .role-card .checkmark {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 24px;
+      height: 24px;
+      background: #667eea;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .role-card.selected .checkmark {
+      display: flex;
+    }
+
+    .role-card .icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+
+    .role-card h3 {
+      margin: 10px 0;
+      color: #333;
+      font-size: 22px;
+    }
+
+    .role-card p {
+      color: #666;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .primary-role-section {
+      margin: 25px 0;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .primary-role-section.show {
+      display: block;
+    }
+
+    .primary-role-section h4 {
+      margin-top: 0;
+      color: #333;
+      font-size: 18px;
+    }
+
+    .primary-role-options {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .primary-role-btn {
+      padding: 12px 30px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+
+    .primary-role-btn:hover {
+      border-color: #667eea;
+    }
+
+    .primary-role-btn.active {
+      border-color: #667eea;
+      background: #667eea;
+      color: white;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #667eea;
+      color: white;
+      transition: all 0.3s;
+    }
+
+    button:hover:not(:disabled) {
+      background: #5568d3;
+      transform: translateY(-2px);
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .error {
+      color: #e74c3c;
+      margin: 15px 0;
+      display: none;
+      padding: 12px;
+      background: #fee;
+      border-radius: 5px;
+    }
+
+    .success {
+      color: #27ae60;
+      margin: 15px 0;
+      display: none;
+      padding: 12px;
+      background: #efe;
+      border-radius: 5px;
+    }
+
+    @media (max-width: 600px) {
+      .role-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .primary-role-options {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="role-container">
+  <div class="google-badge" id="google-badge" style="display: none;">
+    <svg width="24" height="24" viewBox="0 0 24 24">
+      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+    </svg>
+    <span>Signed in with Google</span>
+  </div>
+
+  <h2 id="main-heading">Welcome to FarmDirect! 🌾</h2>
+  <p class="welcome-text" id="welcome-text">Select your role(s) to get started</p>
+  
+  <div class="info-box">
+    <p><strong>💡 Tip:</strong> You can select both roles! Sell your produce as a farmer AND buy from other farmers as a retailer.</p>
+  </div>
+
+  <div class="error" id="error-msg"></div>
+  <div class="success" id="success-msg"></div>
+
+  <div class="role-cards">
+    <div class="role-card" onclick="toggleRole('farmer')">
+      <div class="checkmark">✓</div>
+      <div class="icon">🌾</div>
+      <h3>Farmer</h3>
+      <p>List and sell your produce directly to retailers</p>
+    </div>
+
+    <div class="role-card" onclick="toggleRole('retailer')">
+      <div class="checkmark">✓</div>
+      <div class="icon">🛒</div>
+      <h3>Retailer</h3>
+      <p>Browse and order fresh produce from farmers</p>
+    </div>
+  </div>
+
+  <div class="primary-role-section" id="primary-role-section">
+    <h4>Which would you like as your primary dashboard?</h4>
+    <div class="primary-role-options">
+      <button class="primary-role-btn" id="farmer-primary" onclick="setPrimaryRole('farmer')">
+        🌾 Farmer First
+      </button>
+      <button class="primary-role-btn" id="retailer-primary" onclick="setPrimaryRole('retailer')">
+        🛒 Retailer First
+      </button>
+    </div>
+  </div>
+
+  <button id="continue-btn" onclick="continueToApp()" disabled>
+    Continue
+  </button>
+</div>
+
+<script>
+let selectedRoles = [];
+let primaryRole = null;
+
+const urlParams = new URLSearchParams(window.location.search);
+const token = urlParams.get('token');
+const userId = urlParams.get('userId');
+const userName = urlParams.get('name');
+const userEmail = urlParams.get('email');
+const isNewUser = urlParams.get('newUser') === 'true';
+
+if (!token || !userId) {
+  alert('Invalid access. Redirecting to login...');
+  window.location.href = 'login.html';
+}
+
+// Show Google badge if new user
+if (isNewUser && userEmail) {
+  document.getElementById('google-badge').style.display = 'inline-flex';
+  document.getElementById('main-heading').textContent = `Welcome, ${userName || 'there'}! 👋`;
+  document.getElementById('welcome-text').innerHTML = `
+    Your Google account (${userEmail}) is verified!<br>
+    Now, let's set up your FarmDirect profile
+  `;
+}
+
+function showError(message) {
+  const errorEl = document.getElementById('error-msg');
+  errorEl.textContent = message;
+  errorEl.style.display = 'block';
+  document.getElementById('success-msg').style.display = 'none';
+}
+
+function showSuccess(message) {
+  const successEl = document.getElementById('success-msg');
+  successEl.textContent = message;
+  successEl.style.display = 'block';
+  document.getElementById('error-msg').style.display = 'none';
+}
+
+function toggleRole(role) {
+  const card = event.currentTarget;
+  
+  if (selectedRoles.includes(role)) {
+    selectedRoles = selectedRoles.filter(r => r !== role);
+    card.classList.remove('selected');
+  } else {
+    selectedRoles.push(role);
+    card.classList.add('selected');
+  }
+
+  const primarySection = document.getElementById('primary-role-section');
+  if (selectedRoles.length === 2) {
+    primarySection.classList.add('show');
+    if (!primaryRole) {
+      setPrimaryRole(selectedRoles[0]);
+    }
+  } else {
+    primarySection.classList.remove('show');
+    primaryRole = selectedRoles[0] || null;
+  }
+
+  document.getElementById('continue-btn').disabled = selectedRoles.length === 0;
+}
+
+function setPrimaryRole(role) {
+  primaryRole = role;
+  
+  document.querySelectorAll('.primary-role-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  if (role === 'farmer') {
+    document.getElementById('farmer-primary').classList.add('active');
+  } else {
+    document.getElementById('retailer-primary').classList.add('active');
+  }
+}
+
+async function continueToApp() {
+  if (selectedRoles.length === 0) {
+    showError('Please select at least one role');
+    return;
+  }
+
+  if (selectedRoles.length === 2 && !primaryRole) {
+    showError('Please select your primary role');
+    return;
+  }
+
+  const activeRole = primaryRole || selectedRoles[0];
+
+  const btn = document.getElementById('continue-btn');
+  btn.disabled = true;
+  btn.textContent = 'Setting up your account...';
+
+  try {
+    const res = await fetch('http://localhost:3000/auth/set-roles', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ 
+        roles: selectedRoles,
+        activeRole: activeRole
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      showSuccess('Account setup complete! Redirecting...');
+      
+      const params = new URLSearchParams({
+        token: data.token,
+        roles: data.roles.join(','),
+        activeRole: data.activeRole,
+        userId: data.userId,
+        name: userName
+      });
+
+      setTimeout(() => {
+        if (activeRole === 'farmer') {
+          window.location.href = 'farmers.html?' + params.toString();
+        } else {
+          window.location.href = 'retailer.html?' + params.toString();
+        }
+      }, 1000);
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Continue';
+      showError(data.error || 'Failed to set roles');
+    }
+  } catch (error) {
+    btn.disabled = false;
+    btn.textContent = 'Continue';
+    showError('Network error: ' + error.message);
+  }
+}
+</script>
+
+</body>
+</html>
