@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "frontend/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/frontend/index.html"
+    },
+    {
+      "src": "/login",
+      "dest": "/frontend/login.html"
+    },
+    {
+      "src": "/register",
+      "dest": "/frontend/register.html"
+    },
+    {
+      "src": "/farmers",
+      "dest": "/frontend/farmers.html"
+    },
+    {
+      "src": "/retailer",
+      "dest": "/frontend/retailer.html"
+    },
+    {
+      "src": "/farmer-orders",
+      "dest": "/frontend/farmer-orders.html"
+    },
+    {
+      "src": "/role-selection",
+      "dest": "/frontend/role-selection.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
+    }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
+}

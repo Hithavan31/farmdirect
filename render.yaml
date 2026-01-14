@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: farmdirect-backend
+    env: node
+    region: oregon # Choose: oregon, frankfurt, singapore
+    plan: free # or starter for paid plan
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false # Set manually in Render dashboard
+      - key: JWT_SECRET
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_CALLBACK_URL
+        sync: false
