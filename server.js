@@ -22,7 +22,7 @@ const MONGO_URI = process.env.MONGO_URI;
 // Google OAuth credentials from environment variables
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || "http://${API_URL}/auth/google/callback";
+const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || "https://farmdirect-backendd.onrender.com/auth/google/callback";
 
 // Check if Google OAuth is properly configured
 if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
@@ -31,14 +31,12 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
   console.warn("   Google Sign-In will not work without these credentials");
 }
 
-// Add this near the top of server.js, replacing the existing cors configuration
-
-// CORS configuration for production
+// ✅ FIXED: CORS configuration for production
 const allowedOrigins = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
-  'https://farmdirect-rouge.vercel.app', // ⚠️ CHANGE THIS to your actual Vercel URL
-  
+  'https://farmdirect-rouge.vercel.app',
+  'https://farmdirect-backendd.onrender.com'
 ];
 
 app.use(cors({
@@ -58,14 +56,18 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+// Parse JSON bodies
+app.use(express.json());
+
 // Session middleware (required for passport)
 app.use(session({
   secret: JWT_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false,
-    maxAge: 24 * 60 * 60 * 1000
+    secure: process.env.NODE_ENV === 'production', // ✅ Use secure cookies in production
+    maxAge: 24 * 60 * 60 * 1000,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax' // ✅ Required for cross-site cookies
   }
 }));
 
@@ -108,9 +110,8 @@ if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        console.log('🔐 Google OAuth - Processing user:', profile.emails[0].value);
+        console.log('🔍 Google OAuth - Processing user:', profile.emails[0].value);
         
-        // Check if user already exists with Google ID
         let user = await User.findOne({ googleId: profile.id });
 
         if (user) {
@@ -118,7 +119,6 @@ if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
           return done(null, user);
         }
 
-        // Check if email exists with local auth
         user = await User.findOne({ email: profile.emails[0].value });
 
         if (user) {
@@ -130,7 +130,6 @@ if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
           return done(null, user);
         }
 
-        // Create new user with default retailer role
         console.log('✨ Creating new Google user');
         const newUser = new User({
           googleId: profile.id,
@@ -153,7 +152,7 @@ if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
   ));
 }
 
-// AUTH MIDDLEWARE - Updated for multi-role
+// AUTH MIDDLEWARE
 function auth(requiredRole) {
   return (req, res, next) => {
     const header = req.headers.authorization;
@@ -166,7 +165,6 @@ function auth(requiredRole) {
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
 
-      // Check if user has the required role (if specified)
       if (requiredRole && !decoded.roles.includes(requiredRole)) {
         return res.status(403).json({ 
           error: "Forbidden: You don't have the required role",
@@ -188,7 +186,8 @@ app.get("/", (req, res) => {
   res.json({
     message: "FarmDirect API v1.0 - Multi-Role Support",
     status: "running",
-    googleAuth: GOOGLE_CLIENT_ID ? "configured" : "not configured"
+    googleAuth: GOOGLE_CLIENT_ID ? "configured" : "not configured",
+    environment: process.env.NODE_ENV || "development"
   });
 });
 
@@ -196,7 +195,6 @@ app.get("/", (req, res) => {
    AUTH ROUTES
 ========================== */
 
-// Traditional registration
 app.post("/auth/register", async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -216,7 +214,6 @@ app.post("/auth/register", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Determine roles array
     let rolesArray = [];
     let activeRole = "";
     
@@ -239,7 +236,6 @@ app.post("/auth/register", async (req, res) => {
 
     await user.save();
 
-    // Auto-create farmer profile if user has farmer role
     if (rolesArray.includes("farmer")) {
       const farmer = new Farmer({
         userId: user._id,
@@ -267,7 +263,6 @@ app.post("/auth/register", async (req, res) => {
   }
 });
 
-// Traditional login
 app.post("/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -281,7 +276,6 @@ app.post("/auth/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    // Check if user registered with Google
     if (user.authProvider === "google" && !user.password) {
       return res.status(401).json({ 
         error: "This account uses Google Sign-In. Please login with Google." 
@@ -293,7 +287,6 @@ app.post("/auth/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    // Ensure user has roles set
     if (!user.roles || user.roles.length === 0) {
       return res.status(400).json({ 
         error: "Account setup incomplete. Please contact support." 
@@ -334,16 +327,13 @@ app.get("/auth/google",
 
 app.get("/auth/google/callback",
   passport.authenticate("google", { 
-    failureRedirect: "http://localhost:3000/login.html?error=google_auth_failed",
+    failureRedirect: "https://farmdirect-rouge.vercel.app/login.html?error=google_auth_failed",
     session: true
   }),
   async (req, res) => {
     try {
       console.log('✅ Google callback successful for:', req.user.email);
-      console.log('   Roles:', req.user.roles);
-      console.log('   Active role:', req.user.activeRole);
 
-      // Generate JWT token
       const token = jwt.sign(
         { 
           id: req.user._id, 
@@ -355,14 +345,11 @@ app.get("/auth/google/callback",
         { expiresIn: "24h" }
       );
 
-      // Check if user needs to select roles (shouldn't happen with new setup, but safety check)
       if (!req.user.roles || req.user.roles.length === 0) {
-        console.log('⚠️  User needs role selection');
-        const redirectUrl = `http://localhost:3000/role-selection.html?token=${token}&userId=${req.user._id}&name=${encodeURIComponent(req.user.name)}&email=${encodeURIComponent(req.user.email)}`;
+        const redirectUrl = `https://farmdirect-rouge.vercel.app/role-selection.html?token=${token}&userId=${req.user._id}&name=${encodeURIComponent(req.user.name)}&email=${encodeURIComponent(req.user.email)}`;
         return res.redirect(redirectUrl);
       }
 
-      // Build redirect URL with all parameters
       const params = new URLSearchParams({
         token: token,
         roles: req.user.roles.join(','),
@@ -372,22 +359,19 @@ app.get("/auth/google/callback",
         name: req.user.name
       });
 
-      // Determine dashboard based on active role
       const dashboardUrl = req.user.activeRole === "farmer" 
-        ? `http://localhost:3000/farmers.html?${params.toString()}`
-        : `http://localhost:3000/retailer.html?${params.toString()}`;
+        ? `https://farmdirect-rouge.vercel.app/farmers.html?${params.toString()}`
+        : `https://farmdirect-rouge.vercel.app/retailer.html?${params.toString()}`;
 
-      console.log('🔄 Redirecting to:', dashboardUrl);
       res.redirect(dashboardUrl);
 
     } catch (error) {
       console.error('❌ Google callback error:', error);
-      res.redirect('http://localhost:3000/login.html?error=callback_failed');
+      res.redirect('https://farmdirect-rouge.vercel.app/login.html?error=callback_failed');
     }
   }
 );
 
-// Add/Update user roles
 app.post("/auth/set-roles", auth(), async (req, res) => {
   try {
     const { roles, activeRole } = req.body;
@@ -414,7 +398,6 @@ app.post("/auth/set-roles", auth(), async (req, res) => {
     user.activeRole = activeRole;
     await user.save();
 
-    // Auto-create farmer profile if farmer role is added
     if (validRoles.includes("farmer")) {
       const existingFarmer = await Farmer.findOne({ userId: user._id });
       if (!existingFarmer) {
@@ -453,7 +436,6 @@ app.post("/auth/set-roles", auth(), async (req, res) => {
   }
 });
 
-// Switch active role
 app.post("/auth/switch-role", auth(), async (req, res) => {
   try {
     const { activeRole } = req.body;
@@ -496,7 +478,6 @@ app.post("/auth/switch-role", auth(), async (req, res) => {
   }
 });
 
-// Get current user info
 app.get("/auth/me", auth(), async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
@@ -518,7 +499,6 @@ app.get("/auth/me", auth(), async (req, res) => {
   }
 });
 
-// Logout
 app.post("/auth/logout", (req, res) => {
   req.logout((err) => {
     if (err) {
@@ -748,8 +728,6 @@ app.get("/orders/me", auth("retailer"), async (req, res) => {
     const orders = await Order.find({ retailerId: req.user.id })
       .sort({ orderDate: -1 });
     
-    console.log(`📊 Retailer ${req.user.name} has ${orders.length} orders`);
-    
     res.json(orders);
   } catch (err) {
     console.error("Error fetching orders:", err);
@@ -766,8 +744,6 @@ app.get("/orders/farmer", auth("farmer"), async (req, res) => {
 
     const orders = await Order.find({ farmerId: farmer._id })
       .sort({ orderDate: -1 });
-    
-    console.log(`📊 Farmer ${farmer.name} has ${orders.length} total orders`);
     
     res.json(orders);
   } catch (err) {
@@ -808,8 +784,6 @@ app.put("/orders/:id/status", auth("farmer"), async (req, res) => {
 
     order.status = status;
     await order.save();
-
-    console.log(`📦 Order ${order._id} status updated to: ${status}`);
     
     res.json({
       message: `Order ${status} successfully`,
@@ -892,6 +866,7 @@ app.listen(PORT, () => {
 ║  Orders: ✅ Enabled                    ║
 ║  Inventory: ✅ Tracking               ║
 ║  Google OAuth: ${GOOGLE_CLIENT_ID ? '✅' : '❌'} ${GOOGLE_CLIENT_ID ? 'Enabled' : 'Not Configured'}     ║
+║  Environment: ${process.env.NODE_ENV || 'development'}              ║
 ╚═══════════════════════════════════════╝
   `);
 });
