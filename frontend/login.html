@@ -175,8 +175,8 @@ function showSuccess(message) {
 }
 
 function loginWithGoogle() {
-  // Redirect to backend Google OAuth route
-  window.location.href = 'http://localhost:3000/auth/google';
+  const apiUrl = window.API_URL || 'https://farmdirect-backendd.onrender.com';
+  window.location.href = apiUrl + '/auth/google';
 }
 
 async function login() {
@@ -198,9 +198,13 @@ async function login() {
   loginBtn.textContent = "Logging in...";
 
   console.log('Attempting login for:', email);
+  console.log('Using API URL:', window.API_URL);
 
   try {
-    const res = await fetch("http://localhost:3000/auth/login", {
+    const apiUrl = window.API_URL || 'https://farmdirect-backendd.onrender.com';
+    console.log('Making request to:', apiUrl + '/auth/login');
+    
+    const res = await fetch(apiUrl + "/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
@@ -233,7 +237,7 @@ async function login() {
     const params = new URLSearchParams({
       token: data.token,
       roles: data.roles ? data.roles.join(',') : data.role,
-      role: data.activeRole || data.role, // Backward compatibility
+      role: data.activeRole || data.role,
       activeRole: data.activeRole || data.role,
       userId: data.userId || '',
       name: data.name || ''
@@ -259,7 +263,7 @@ async function login() {
     loginBtn.disabled = false;
     loginBtn.textContent = "Login";
     console.error('Network error:', error);
-    showError("Network error: " + error.message + ". Make sure the server is running at http://localhost:3000");
+    showError("Network error: " + error.message);
   }
 }
 
@@ -281,13 +285,14 @@ document.addEventListener('keypress', function(e) {
 // Check if server is reachable on page load
 window.addEventListener('load', async function() {
   try {
-    const res = await fetch("http://localhost:3000/");
+    const apiUrl = window.API_URL || 'https://farmdirect-backendd.onrender.com';
+    console.log('Checking server at:', apiUrl);
+    const res = await fetch(apiUrl + "/");
     if (res.ok) {
       console.log('✅ Server is reachable');
     }
   } catch (error) {
-    showError("Cannot connect to server. Please make sure it's running (npm start)");
-    console.error('❌ Server not reachable:', error);
+    console.warn('⚠️ Server check failed:', error.message);
   }
 });
 </script>

@@ -299,6 +299,9 @@ const userName = urlParams.get('name');
 const userEmail = urlParams.get('email');
 const isNewUser = urlParams.get('newUser') === 'true';
 
+console.log('Role selection page loaded');
+console.log('API URL:', API_URL);
+
 if (!token || !userId) {
   alert('Invalid access. Redirecting to login...');
   window.location.href = 'login.html';
@@ -384,8 +387,11 @@ async function continueToApp() {
   btn.disabled = true;
   btn.textContent = 'Setting up your account...';
 
+  console.log('Setting roles:', selectedRoles, 'Active:', activeRole);
+  console.log('Using API URL:', API_URL);
+
   try {
-    const res = await fetch('http://localhost:3000/auth/set-roles', {
+    const res = await fetch(`${API_URL}/auth/set-roles`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -397,7 +403,9 @@ async function continueToApp() {
       })
     });
 
+    console.log('Response status:', res.status);
     const data = await res.json();
+    console.log('Response data:', data);
 
     if (res.ok) {
       showSuccess('Account setup complete! Redirecting...');
@@ -425,6 +433,7 @@ async function continueToApp() {
   } catch (error) {
     btn.disabled = false;
     btn.textContent = 'Continue';
+    console.error('Network error:', error);
     showError('Network error: ' + error.message);
   }
 }

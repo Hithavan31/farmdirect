@@ -191,7 +191,6 @@
 <script src="config.js"></script>
 
 <script>
-  console.log("REGISTER PAGE USING API:", API_URL);
 let selectedRoleValue = '';
 
 function showError(message) {
@@ -256,11 +255,17 @@ async function register() {
   registerBtn.textContent = "Registering...";
 
   console.log('Attempting registration:', { name, email, role });
+  console.log('Using API URL:', window.API_URL);
 
   try {
-    const res = await fetch("${API_URL}/auth/register", {
+    const apiUrl = window.API_URL || 'https://farmdirect-backendd.onrender.com';
+    console.log('Making request to:', apiUrl + '/auth/register');
+    
+    const res = await fetch(apiUrl + "/auth/register", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({ name, email, password, role })
     });
 
@@ -282,7 +287,7 @@ async function register() {
     registerBtn.disabled = false;
     registerBtn.textContent = "Register";
     console.error('Network error:', error);
-    showError("Network error: " + error.message + ". Make sure the server is running.");
+    showError("Network error: " + error.message + ". Please check your internet connection.");
   }
 }
 
@@ -300,22 +305,17 @@ document.addEventListener('keypress', function(e) {
 // Check if server is reachable on page load
 window.addEventListener('load', async function() {
   try {
-    const res = await fetch("${API_URL}/");
+    const apiUrl = window.API_URL || 'https://farmdirect-backendd.onrender.com';
+    console.log('Checking server at:', apiUrl);
+    const res = await fetch(apiUrl + "/");
     if (res.ok) {
       console.log('✅ Server is reachable');
     }
   } catch (error) {
-    showError("Cannot connect to server. Please make sure it's running (npm start)");
-    console.error('❌ Server not reachable:', error);
+    console.warn('⚠️ Server check failed:', error.message);
   }
 });
-
 </script>
-<script src="config.js"></script>
-
-<script>
-  console.log("REGISTER PAGE USING API:", API_URL);
-  </script>
 
 </body>
 </html>

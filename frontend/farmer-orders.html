@@ -360,9 +360,10 @@ function showSuccess(message) {
 async function loadOrders() {
   console.log('=== Loading Farmer Orders ===');
   console.log('Token:', authToken ? authToken.substring(0, 20) + '...' : 'MISSING');
+  console.log('API URL:', API_URL);
   
   try {
-    const res = await fetch('http://localhost:3000/orders/farmer', {
+    const res = await fetch(`${API_URL}/orders/farmer`, {
       headers: {
         'Authorization': `Bearer ${authToken}`
       }
@@ -418,7 +419,7 @@ function displayOrders() {
   if (filteredOrders.length === 0) {
     container.innerHTML = `
       <div class="no-orders">
-        <h2>📭 No ${currentFilter === 'all' ? '' : currentFilter} orders yet</h2>
+        <h2>🔭 No ${currentFilter === 'all' ? '' : currentFilter} orders yet</h2>
         <p>Orders will appear here when retailers place them</p>
       </div>
     `;
@@ -428,7 +429,6 @@ function displayOrders() {
   container.innerHTML = '';
 
   filteredOrders.forEach(order => {
-    // Safe property access with defaults
     const orderDate = order.orderDate || new Date();
     const date = new Date(orderDate).toLocaleString('en-IN');
     const status = order.status || 'pending';
@@ -527,7 +527,7 @@ async function updateOrderStatus(orderId, newStatus) {
   console.log('Updating order:', orderId, 'to status:', newStatus);
 
   try {
-    const res = await fetch(`http://localhost:3000/orders/${orderId}/status`, {
+    const res = await fetch(`${API_URL}/orders/${orderId}/status`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -542,7 +542,7 @@ async function updateOrderStatus(orderId, newStatus) {
 
     if (res.ok) {
       showSuccess(`Order ${newStatus} successfully!`);
-      loadOrders(); // Reload orders
+      loadOrders();
     } else {
       showError(data.error || 'Failed to update order status');
     }
@@ -555,7 +555,6 @@ async function updateOrderStatus(orderId, newStatus) {
 function filterOrders(status) {
   currentFilter = status;
   
-  // Update active tab
   document.querySelectorAll('.filter-tab').forEach(tab => {
     tab.classList.remove('active');
   });
@@ -579,11 +578,9 @@ function logout() {
   }
 }
 
-// Load orders on page load
 console.log('Page loaded, starting to load orders...');
 loadOrders();
 
-// Auto-refresh every 30 seconds
 setInterval(() => {
   console.log('Auto-refreshing orders...');
   loadOrders();

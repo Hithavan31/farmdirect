@@ -7,7 +7,7 @@ const CONFIG = {
   // Determine environment
   isLocal: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1',
   
-  // API URLs - ✅ FIXED: Now uses your actual production backend URL
+  // API URLs - Uses production backend URL
   API_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:3000'
     : 'https://farmdirect-backendd.onrender.com',
@@ -29,4 +29,4 @@ if (CONFIG.DEBUG) {
 
 // Export for use in other scripts
 window.FARMDIRECT_CONFIG = CONFIG;
-window.API_URL = CONFIG.API_URL; // ✅ Make API_URL globally available
+window.API_URL = CONFIG.API_URL;
