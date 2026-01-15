@@ -188,9 +188,14 @@
   <button type="button" class="btn-secondary" onclick="goLogin()">Already have an account? Login</button>
 </div>
 
+// Replace the script section in register.html
+// Make sure config.js is loaded before this
+
 <script src="config.js"></script>
 
 <script>
+console.log("REGISTER PAGE USING API:", API_URL);
+
 let selectedRoleValue = '';
 
 function showError(message) {
@@ -255,21 +260,23 @@ async function register() {
   registerBtn.textContent = "Registering...";
 
   console.log('Attempting registration:', { name, email, role });
-  console.log('Using API URL:', window.API_URL);
+  console.log('Using API URL:', API_URL);
+
+  const requestBody = { name, email, password, role };
+  console.log('Request body:', requestBody);
 
   try {
-    const apiUrl = window.API_URL || 'https://farmdirect-backendd.onrender.com';
-    console.log('Making request to:', apiUrl + '/auth/register');
-    
-    const res = await fetch(apiUrl + "/auth/register", {
+    const res = await fetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ name, email, password, role })
+      body: JSON.stringify(requestBody)
     });
 
     console.log('Response status:', res.status);
+    console.log('Response headers:', [...res.headers.entries()]);
+    
     const data = await res.json();
     console.log('Response data:', data);
 
@@ -287,7 +294,7 @@ async function register() {
     registerBtn.disabled = false;
     registerBtn.textContent = "Register";
     console.error('Network error:', error);
-    showError("Network error: " + error.message + ". Please check your internet connection.");
+    showError("Network error: " + error.message + ". Make sure the server is running.");
   }
 }
 
@@ -305,14 +312,15 @@ document.addEventListener('keypress', function(e) {
 // Check if server is reachable on page load
 window.addEventListener('load', async function() {
   try {
-    const apiUrl = window.API_URL || 'https://farmdirect-backendd.onrender.com';
-    console.log('Checking server at:', apiUrl);
-    const res = await fetch(apiUrl + "/");
+    const res = await fetch(`${API_URL}/`);
     if (res.ok) {
       console.log('✅ Server is reachable');
+      const data = await res.json();
+      console.log('Server info:', data);
     }
   } catch (error) {
-    console.warn('⚠️ Server check failed:', error.message);
+    showError("Cannot connect to server. Please make sure it's running.");
+    console.error('❌ Server not reachable:', error);
   }
 });
 </script>

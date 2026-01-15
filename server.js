@@ -13,6 +13,9 @@ const User = require("./models/User");
 const Farmer = require("./models/Farmer");
 const Order = require("./models/Order");
 
+// Replace the middleware section in server.js (after const app = express();)
+// This ensures proper order of middleware
+
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -31,7 +34,9 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
   console.warn("   Google Sign-In will not work without these credentials");
 }
 
-// ✅ FIXED: CORS configuration for production
+// ✅ CRITICAL: Middleware must be in this exact order!
+
+// 1. CORS - Must be first
 const allowedOrigins = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
@@ -41,7 +46,6 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
     if (!origin) return callback(null, true);
     
     if (allowedOrigins.includes(origin)) {
@@ -56,22 +60,23 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Parse JSON bodies
-app.use(express.json());
+// 2. Body parsers - MUST come before routes
+app.use(express.json({ limit: '10mb' })); // ✅ Parse JSON bodies
+app.use(express.urlencoded({ extended: true, limit: '10mb' })); // ✅ Parse URL-encoded bodies
 
-// Session middleware (required for passport)
+// 3. Session middleware
 app.use(session({
   secret: JWT_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // ✅ Use secure cookies in production
+    secure: process.env.NODE_ENV === 'production',
     maxAge: 24 * 60 * 60 * 1000,
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax' // ✅ Required for cross-site cookies
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
   }
 }));
 
-// Initialize Passport
+// 4. Passport initialization
 app.use(passport.initialize());
 app.use(passport.session());
 

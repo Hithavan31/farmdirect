@@ -149,9 +149,14 @@
   <button type="button" class="btn-secondary" onclick="goHome()">Back to Home</button>
 </div>
 
+// Replace the script section in login.html
+// Make sure config.js is loaded before this
+
 <script src="config.js"></script>
 
 <script>
+console.log("LOGIN PAGE USING API:", API_URL);
+
 // Check for errors in URL
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get('error') === 'google_auth_failed') {
@@ -175,8 +180,8 @@ function showSuccess(message) {
 }
 
 function loginWithGoogle() {
-  const apiUrl = window.API_URL || 'https://farmdirect-backendd.onrender.com';
-  window.location.href = apiUrl + '/auth/google';
+  console.log('Redirecting to Google OAuth:', `${API_URL}/auth/google`);
+  window.location.href = `${API_URL}/auth/google`;
 }
 
 async function login() {
@@ -198,19 +203,22 @@ async function login() {
   loginBtn.textContent = "Logging in...";
 
   console.log('Attempting login for:', email);
-  console.log('Using API URL:', window.API_URL);
+  console.log('Using API URL:', API_URL);
+
+  const requestBody = { email, password };
+  console.log('Request body:', requestBody);
 
   try {
-    const apiUrl = window.API_URL || 'https://farmdirect-backendd.onrender.com';
-    console.log('Making request to:', apiUrl + '/auth/login');
-    
-    const res = await fetch(apiUrl + "/auth/login", {
+    const res = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
+      headers: { 
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(requestBody)
     });
 
     console.log('Response status:', res.status);
+    console.log('Response headers:', [...res.headers.entries()]);
     
     const data = await res.json();
     console.log('Response data:', data);
@@ -233,7 +241,7 @@ async function login() {
     showSuccess("Login successful! Redirecting...");
     console.log('Login successful. Roles:', data.roles, 'Active:', data.activeRole);
     
-    // Create URL parameters - support both roles array and single role
+    // Create URL parameters
     const params = new URLSearchParams({
       token: data.token,
       roles: data.roles ? data.roles.join(',') : data.role,
@@ -263,7 +271,7 @@ async function login() {
     loginBtn.disabled = false;
     loginBtn.textContent = "Login";
     console.error('Network error:', error);
-    showError("Network error: " + error.message);
+    showError("Network error: " + error.message + ". Make sure the server is running.");
   }
 }
 
@@ -285,14 +293,15 @@ document.addEventListener('keypress', function(e) {
 // Check if server is reachable on page load
 window.addEventListener('load', async function() {
   try {
-    const apiUrl = window.API_URL || 'https://farmdirect-backendd.onrender.com';
-    console.log('Checking server at:', apiUrl);
-    const res = await fetch(apiUrl + "/");
+    const res = await fetch(`${API_URL}/`);
     if (res.ok) {
       console.log('✅ Server is reachable');
+      const data = await res.json();
+      console.log('Server info:', data);
     }
   } catch (error) {
-    console.warn('⚠️ Server check failed:', error.message);
+    showError("Cannot connect to server. Please make sure it's running.");
+    console.error('❌ Server not reachable:', error);
   }
 });
 </script>
